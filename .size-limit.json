@@ -1,0 +1,13 @@
+[
+  {
+    "name": "core (esm)",
+    "path": "dist/core.js",
+    "limit": "5 kB"
+  },
+  {
+    "name": "react (esm)",
+    "path": "dist/index.js",
+    "limit": "7 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime"]
+  }
+]

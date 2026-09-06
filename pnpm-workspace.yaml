@@ -1,0 +1,15 @@
+packages:
+  - '.'
+  - 'examples/*'
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@changesets/apply-release-plan@8.1.0'
+  - '@changesets/cli@3.0.2'
+  - '@changesets/git@4.0.1'
+  - '@changesets/read@1.0.1'
+  - '@types/react-dom@19.2.7'
+  - '@vitest/coverage-v8@5.0.0'
+  - '@vitest/mocker@5.0.0'
+  - '@vitest/spy@5.0.0'
+  - vitest@5.0.0

@@ -1,0 +1,104 @@
+{
+  "name": "glass-scroll",
+  "version": "0.1.0",
+  "description": "A glass overlay scrollbar for React. Drop one component into your root layout and every scrollbar on the site becomes a translucent, blurred pill with zero layout width.",
+  "keywords": [
+    "react",
+    "scrollbar",
+    "custom-scrollbar",
+    "overlay-scrollbar",
+    "glass",
+    "glassmorphism",
+    "nextjs",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Sami Khan",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sami999khan999/glass_scroll"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "styles.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js",
+      "require": "./dist/core.cjs"
+    },
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/emit-css.mjs",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "size": "size-limit",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.2",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
+    "@size-limit/preset-small-lib": "^13.0.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitest/coverage-v8": "^5.0.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "expect-type": "^1.4.0",
+    "jsdom": "^30.0.1",
+    "prettier": "^3.9.6",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "size-limit": "^13.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.69.0",
+    "vitest": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "pnpm@11.12.0"
+}
