@@ -205,6 +205,7 @@ scrollbar and, when `scope="all"`, the global native-scrollbar theme.
 | `trackClick` | `'none' \| 'page' \| 'jump'` | `'none'` | Behaviour when clicking the empty track. `'none'` keeps the track inert so it never eats clicks on content beneath it. `'page'` scrolls one viewport; `'jump'` scrolls to the clicked position. Both make the track interactive **only while the bar is visible**. |
 | `exclude` | `string` | `'.no-glass, [data-glass-scroll="off"]'` | In `scope="all"`, elements matching this selector keep the browser default scrollbar. Useful for third-party widgets. |
 | `hideNative` | `string` | `'.no-scrollbar, [data-glass-scroll="hidden"]'` | Selector whose native bar is hidden entirely (no overlay, no theme). For snap carousels and tab strips. |
+| `themeScope` | `string` | `''` | Elements that set their own design tokens, such as `[data-theme]`. Colours written as `var(--token)` then follow the nearest one instead of the page root. See [Design tokens](#design-tokens). |
 | `classNames` | `{ root?, track?, thumb?, trackX?, thumbX? }` | `{}` | Extra classes per part. |
 | `styles` | `{ root?, track?, thumb?, trackX?, thumbX? }` | `{}` | Inline style objects per part. |
 | `injectStyles` | `boolean` | `true` | Render the stylesheet inline in a deduplicated `<style>` tag. Set `false` if you import `glass-scroll/styles.css` yourself. |
@@ -365,6 +366,30 @@ Custom presets are just objects: `<GlassScroll theme={defineTheme({ ...presets.g
 `darkSelector` block, so it works with system preference and with class-based toggles
 (Tailwind `.dark`, next-themes `[data-theme]`). `colorScheme="dark"` or `"light"` forces one
 palette.
+
+### Design tokens
+
+Theme colours can be CSS variables from your own design system:
+
+```tsx
+<GlassScroll
+  colorScheme="light"
+  themeScope="[data-theme]"
+  theme={{
+    thumbBg: 'color-mix(in oklch, var(--fg-muted) 45%, transparent)',
+    thumbBgHover: 'color-mix(in oklch, var(--fg-muted) 70%, transparent)',
+  }}
+/>
+```
+
+When the tokens already change with dark mode, `colorScheme="light"` is enough: there is no need
+for a separate `dark` palette.
+
+**Set `themeScope` when a part of the page carries its own tokens.** A custom property's `var()`
+references are resolved on the element that declares it. Declared only on `:root`, `var(--fg)`
+is the root's value everywhere, even inside a wrapper that redefines `--fg`, such as a light
+panel on a dark page. `themeScope` re-declares the variables on every matching element, so each
+scroller takes its colours from the nearest scope.
 
 ### Escape hatches
 

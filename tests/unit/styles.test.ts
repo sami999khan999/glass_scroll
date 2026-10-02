@@ -42,6 +42,20 @@ describe('resolveTheme', () => {
 })
 
 describe('buildCSS', () => {
+  it('re-declares the variables on each themeScope so var() colours follow nested tokens', () => {
+    const css = buildCSS({ themeScope: '[data-theme]', theme: { thumbBg: 'var(--fg)' } })
+    expect(css).toContain(':is([data-theme]){--gs-')
+    expect(css).toMatch(/:is\(\[data-theme\]\)\{[^}]*--gs-thumb-bg:var\(--fg\)/)
+    expect(css).toMatch(/:is\(\[data-theme\]\)\{[^}]*--_gs-thumb-bg:var\(--gs-thumb-bg\)/)
+    expect(css).toContain(':root,.gs-root,:is([data-theme]){--_gs-thumb-bg:var(--gs-thumb-bg-dark)')
+  })
+  it('emits no scope rule by default', () => {
+    expect(buildCSS()).not.toContain(':is([data-theme]){')
+  })
+  it('puts the scope before the dark rules so dark mode still wins inside it', () => {
+    const css = buildCSS({ themeScope: '.scope', colorScheme: 'auto' })
+    expect(css.indexOf(':is(.scope){')).toBeLessThan(css.indexOf('@media (prefers-color-scheme:dark)'))
+  })
   it('emits every variable on :root and the light/dark mapping', () => {
     const css = buildCSS()
     expect(css).toMatch(/^:root\{--gs-/)

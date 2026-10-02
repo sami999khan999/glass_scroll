@@ -158,6 +158,12 @@ export interface BuildCSSOptions {
   theme?: PartialTheme
   /** Hide the document's native scrollbar. Default `true`. */
   hideDocument?: boolean
+  /**
+   * Elements that set their own design tokens, such as a theme wrapper (`[data-theme]`). The
+   * variables are re-declared on them, so colours written as `var(--token)` resolve against the
+   * nearest scope instead of being frozen at `:root`. Default `''` (none).
+   */
+  themeScope?: string
 }
 
 export const DEFAULT_EXCLUDE = '.no-glass, [data-glass-scroll="off"]'
@@ -281,6 +287,7 @@ export const buildCSS = (options: BuildCSSOptions = {}): string => {
     preset = 'glass',
     theme = {},
     hideDocument = true,
+    themeScope = '',
   } = options
 
   const resolved = resolveTheme(preset, theme)
@@ -291,10 +298,15 @@ export const buildCSS = (options: BuildCSSOptions = {}): string => {
   // mapping is re-declared on .gs-root so an inline override on a root still resolves locally.
   parts.push(`:root{${vars};${mapping(false)}}`)
   parts.push(`${R}{${mapping(false)}}`)
+  // A custom property's var() references are substituted where it is declared, so a colour such
+  // as `var(--fg)` set only on :root never sees a nested theme's --fg. Re-declare it per scope.
+  const tokenScope = themeScope.trim()
+  const scoped = tokenScope ? `,:is(${tokenScope})` : ''
+  if (tokenScope) parts.push(`:is(${tokenScope}){${vars};${mapping(false)}}`)
   if (colorScheme === 'dark') {
-    parts.push(`:root,${R}{${mapping(true)}}`)
+    parts.push(`:root,${R}${scoped}{${mapping(true)}}`)
   } else if (colorScheme === 'auto') {
-    parts.push(`@media (prefers-color-scheme:dark){:root,${R}{${mapping(true)}}}`)
+    parts.push(`@media (prefers-color-scheme:dark){:root,${R}${scoped}{${mapping(true)}}}`)
     if (darkSelector.trim()) parts.push(`:is(${darkSelector}),:is(${darkSelector}) ${R}{${mapping(true)}}`)
     if (lightSelector.trim())
       parts.push(`:is(${lightSelector}),:is(${lightSelector}) ${R}{${mapping(false)}}`)

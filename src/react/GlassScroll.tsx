@@ -46,6 +46,11 @@ export interface GlassScrollProps {
   exclude?: string
   /** Elements whose native scrollbar is hidden entirely. */
   hideNative?: string
+  /**
+   * Elements that set their own design tokens (for example `[data-theme]`). Colours written as
+   * `var(--token)` then follow the nearest such element instead of the page root.
+   */
+  themeScope?: string
   classNames?: PartClassNames
   styles?: PartStyles
   /** Render the stylesheet inline. Set `false` if you import `glass-scroll/styles.css`. Default `true`. */
@@ -84,6 +89,7 @@ export function GlassScroll({
   trackClick = 'none',
   exclude,
   hideNative,
+  themeScope,
   classNames = {},
   styles = {},
   injectStyles = true,
@@ -111,12 +117,24 @@ export function GlassScroll({
         hideDocument: !disabled,
         ...(exclude !== undefined && { exclude }),
         ...(hideNative !== undefined && { hideNative }),
+        ...(themeScope !== undefined && { themeScope }),
         ...(darkSelector !== undefined && { darkSelector }),
         ...(lightSelector !== undefined && { lightSelector }),
       }),
     // theme is compared by value via themeKey
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [scope, colorScheme, preset, themeKey, disabled, exclude, hideNative, darkSelector, lightSelector],
+    [
+      scope,
+      colorScheme,
+      preset,
+      themeKey,
+      disabled,
+      exclude,
+      hideNative,
+      themeScope,
+      darkSelector,
+      lightSelector,
+    ],
   )
 
   const rootStyle = React.useMemo<React.CSSProperties>(() => {
